@@ -10,6 +10,8 @@ N = 2
 lower, upper = 0, 1001
 guess = (lower+upper)//2
 count = 0
+
+# Use bisection search algorithm to make correct guess (eventually)
 while (guess != N):
     count += 1
     if guess > N:
