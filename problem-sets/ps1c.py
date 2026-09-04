@@ -35,10 +35,9 @@ else:
         steps += 1
         if initial_deposit*(1+best_savings_rate/12)**36 < down_payment - 100:
             r_lower_bound = best_savings_rate
-            best_savings_rate = (r_upper_bound + r_lower_bound)/2
         else:
             r_upper_bound = best_savings_rate
-            best_savings_rate = (r_upper_bound + r_lower_bound)/2
+        best_savings_rate = (r_upper_bound + r_lower_bound)//2    
 
 print(f"Best savings rate: {best_savings_rate}")
 print(f"Steps in bisection search: {steps}")
