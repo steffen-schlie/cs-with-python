@@ -8,7 +8,6 @@
 ##############################################
 initial_deposit = float(input("Enter the initial deposit: "))
 
-
 #########################################################################
 ## Initialize other variables you need (if any) for your program below ##
 #########################################################################
@@ -19,12 +18,9 @@ r_upper_bound = 1
 r_lower_bound = 0
 best_savings_rate = 0.5
 
-
-
 ##################################################################################################
 ## Determine the lowest rate of return needed to get the down payment for your dream home below ##
 ##################################################################################################
-# Check whether initial amount is already enough
 if initial_deposit >= down_payment:
     best_savings_rate = 0.0
 elif initial_deposit*(1+1/12)**36 < down_payment - 100:
