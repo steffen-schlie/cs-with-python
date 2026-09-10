@@ -14,7 +14,7 @@ def eval_quadratic(a, b, c, x):
     # My code here:
     return a*x*x + b*x + c
 
-print(eval_quadratic(2,-3,0,2))
+# print(eval_quadratic(2,-3,0,2))
 
 
 def two_quadratics(a1, b1, c1, x1, a2, b2, c2, x2):
@@ -29,6 +29,19 @@ def two_quadratics(a1, b1, c1, x1, a2, b2, c2, x2):
     # My code here
     print(eval_quadratic(a1, b1, c1, x1)+eval_quadratic(a2, b2, c2, x2))
 
-two_quadratics(1,1,1,1,1,1,1,1)
-print(two_quadratics(1,1,1,1,1,1,1,1)) 
+# two_quadratics(1,1,1,1,1,1,1,1)
+# print(two_quadratics(1,1,1,1,1,1,1,1)) 
+
+
+# YOU TRY IT FROM LECTURE
+
+def div_by(n, d):
+    """
+    n, d: positive integers
+    Returns True if d divides n evenly and False otherwise
+    """
+    return n%d==0
+
+print(div_by(10, 3))
+print(div_by(195, 13))
 
