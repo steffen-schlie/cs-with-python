@@ -12,7 +12,7 @@ def eval_quadratic(a, b, c, x):
     Returns the value of the quadratic a×x² + b×x + c.
     """
     # My code here:
-    return a*(x**2) + b*x + c
+    return a*x*x + b*x + c
 
 print(eval_quadratic(2,-3,0,2))
 
