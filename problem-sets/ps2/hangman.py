@@ -3,6 +3,7 @@
 # Collaborators:
 # Time spent:
 
+import os
 import random
 import string
 
@@ -10,7 +11,7 @@ import string
 # HELPER CODE
 # -----------------------------------
 
-WORDLIST_FILENAME = "words.txt"
+WORDLIST_FILENAME = os.path.join(os.path.dirname(os.path.abspath(__file__)), "words.txt")
 
 def load_words():
     """
@@ -55,7 +56,11 @@ def has_player_won(secret_word, letters_guessed):
         False otherwise
     """
     # FILL IN YOUR CODE HERE AND DELETE "pass"
-    pass
+    for char in secret_word:
+      if char not in letters_guessed:
+          return False
+    return True    
+    
 
 
 def get_word_progress(secret_word, letters_guessed):
@@ -68,7 +73,17 @@ def get_word_progress(secret_word, letters_guessed):
         which letters in secret_word have not been guessed so far
     """
     # FILL IN YOUR CODE HERE AND DELETE "pass"
-    pass
+    word_progress = ""
+    if len(letters_guessed)==0:
+        for char in secret_word:
+            word_progress += "*"
+        return word_progress
+    for char in secret_word:
+        if char in letters_guessed:
+            word_progress += char
+        else:
+            word_progress += "*"
+    return word_progress
 
 
 def get_available_letters(letters_guessed):
@@ -81,8 +96,11 @@ def get_available_letters(letters_guessed):
       alphabetical order
     """
     # FILL IN YOUR CODE HERE AND DELETE "pass"
-    pass
-
+    available_letters = ""
+    for l in string.ascii_lowercase:
+        if l not in letters_guessed:
+            available_letters += l
+    return available_letters
 
 
 def hangman(secret_word, with_help):
