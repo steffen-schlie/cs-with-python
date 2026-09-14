@@ -143,7 +143,51 @@ def hangman(secret_word, with_help):
     Follows the other limitations detailed in the problem write-up.
     """
     # FILL IN YOUR CODE HERE AND DELETE "pass"
-    pass
+    in_play = True
+    guesses_remaining = 10
+    letters_guessed = []
+
+    # Print out start message
+    print("Welcome to hangman!")
+    print(f"I am thinking of a word that is {len(secret_word)} letters long.")
+
+    # Game mechanics
+    while in_play:
+        if guesses_remaining == 0:
+            print(f"Sorry, you ran out of guesses. The word was {secret_word}")
+        else:
+            # Print out current status of game to user
+            print("--------------")
+            # Check winning condition
+            if has_player_won(secret_word, letters_guessed):
+                print("Congratulations, you won!")
+                print(f"Your total score for this game is: {(guesses_remaining + 4*len(set(secret_word))) + (3*len(secret_word))}")
+                in_play = False
+            else: 
+                if guesses_remaining > 1:
+                    print(f"You have {guesses_remaining} guesses remaining.")
+                else:
+                    print(f"You have {guesses_remaining} guess remaining.")
+
+                print(f"Available letters: {get_available_letters(letters_guessed)}")
+
+                # Get user input and check for validity
+                new_letter = input("Please guess a letter: ").lower()
+                if len(new_letter) == 1 and new_letter in string.ascii_lowercase:
+                    # If letter is valid, check whether it was already guessed
+                    if new_letter in letters_guessed:
+                        print(f"Oops! You've already guessed the letter: {get_word_progress(secret_word, letters_guessed)}")
+                    # If letter is new, check whether it is part of the secret word or not to give feedback to user
+                    else: 
+                        letters_guessed.append(new_letter)
+                        if new_letter in secret_word:
+                            # Letter is new and contained in secret word 
+                            print(f"Good guess: {get_word_progress(secret_word,letters_guessed)}")
+                        else: 
+                            guesses_remaining -= 1
+                            print(f"Oops! That letter is not in my word: {get_word_progress(secret_word,letters_guessed)}")
+                else:
+                    print(f"Oops! That is not a valid letter. Please input a letter from the alphabet: {get_word_progress(secret_word,letters_guessed)}")
 
 
 
@@ -153,9 +197,9 @@ def hangman(secret_word, with_help):
 if __name__ == "__main__":
     # To test your game, uncomment the following three lines.
 
-    # secret_word = choose_word(wordlist)
-    # with_help = False
-    # hangman(secret_word, with_help)
+    secret_word = choose_word(wordlist)
+    with_help = False
+    hangman(secret_word, with_help)
 
     # After you complete with_help functionality, change with_help to True
     # and try entering "!" as a guess!
