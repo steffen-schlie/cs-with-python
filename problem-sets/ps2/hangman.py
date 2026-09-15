@@ -103,6 +103,22 @@ def get_available_letters(letters_guessed):
     return available_letters
 
 
+def reveal_letter(secret_word, letters_available):
+    """
+    secret_word: string, the secret word to guess.
+    letters_available: string of available lowercase letters
+    Returns a letter that was not guessed by the user and is part of the secret word.
+    """
+    choose_from = ''
+    for e in letters_available:
+        if e in secret_word:
+            choose_from += e
+
+    new = random.randint(0, len(choose_from)-1)
+    revealed_letter = choose_from[new]
+    return revealed_letter
+
+
 def hangman(secret_word, with_help):
     """
     secret_word: string, the secret word to guess.
@@ -155,6 +171,7 @@ def hangman(secret_word, with_help):
     while in_play:
         if guesses_remaining == 0:
             print(f"Sorry, you ran out of guesses. The word was {secret_word}")
+            in_play = False
         else:
             # Print out current status of game to user
             print("--------------")
@@ -186,6 +203,16 @@ def hangman(secret_word, with_help):
                         else: 
                             guesses_remaining -= 1
                             print(f"Oops! That letter is not in my word: {get_word_progress(secret_word,letters_guessed)}")
+                elif new_letter == '!' and with_help:
+                    # Implement help functionality in here
+                    if guesses_remaining < 4:
+                        print(f"Oops! Not enough guesses left: {get_word_progress(secret_word,letters_guessed)}")
+                    else:
+                        revealed_letter = reveal_letter(secret_word, get_available_letters(letters_guessed))
+                        letters_guessed.append(revealed_letter)
+                        guesses_remaining -= 3
+                        print(f"Letter revealed: {revealed_letter}")
+                        print(get_word_progress(secret_word, letters_guessed))
                 else:
                     print(f"Oops! That is not a valid letter. Please input a letter from the alphabet: {get_word_progress(secret_word,letters_guessed)}")
 
@@ -198,7 +225,7 @@ if __name__ == "__main__":
     # To test your game, uncomment the following three lines.
 
     secret_word = choose_word(wordlist)
-    with_help = False
+    with_help = True
     hangman(secret_word, with_help)
 
     # After you complete with_help functionality, change with_help to True
