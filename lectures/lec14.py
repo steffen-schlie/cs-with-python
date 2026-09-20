@@ -44,5 +44,5 @@ def all_positive(d):
     return sorted_list
 
 # Examples:
-d = {5:[2,-4], 2:[1,2,3], 1:[2]}
-print(all_positive(d))   # prints the list [1, 2]
+d = {5:[2,-4], 2:[1,-12,3], 1:[2], -4:[-2,5]}
+print(all_positive(d))   # prints the list [-4, 1]
