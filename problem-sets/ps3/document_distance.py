@@ -112,7 +112,29 @@ def calculate_similarity_score(freq_dict1, freq_dict2):
          all frequencies in both dict1 and dict2.
         Return 1-(DIFF/ALL) rounded to 2 decimal places
     """
-    pass
+    # get lists of words from both dictionaries
+    words_dict1 = list(freq_dict1.keys())
+    words_dict2 = list(freq_dict2.keys())
+
+    # create list of unique words
+    unique_words = list(set(words_dict1+words_dict2))
+
+    # loop through list of unqiue words, get frequencies from dicts
+    # and set frequ to zero if not found in dict
+    # keep track of total sum of delta and sigma scores
+    delta_score = 0
+    sigma_score = 0
+    for word in unique_words:
+        if word in words_dict1 and word in words_dict2:
+            delta_score += abs(freq_dict1[word]-freq_dict2[word])
+            sigma_score += freq_dict1[word]+freq_dict2[word]
+        elif word in words_dict1 and word not in words_dict2:
+            delta_score += freq_dict1[word]
+            sigma_score += freq_dict1[word]
+        else:
+            delta_score += freq_dict2[word]
+            sigma_score += freq_dict2[word]
+    return round(1-delta_score/sigma_score, 2)
 
 
 ### Problem 4: Most Frequent Word(s) ###
@@ -136,7 +158,41 @@ def get_most_frequent_words(freq_dict1, freq_dict2):
     If multiple words are tied (i.e. share the same highest frequency),
     return an alphabetically ordered list of all these words.
     """
-    pass
+    # get lists of words from both dictionaries
+    words_dict1 = list(freq_dict1.keys())
+    words_dict2 = list(freq_dict2.keys())
+
+    # create list of unique words
+    unique_words = list(set(words_dict1+words_dict2))
+
+    current_highest = []
+    current_max_count = 0
+
+    for word in unique_words:
+        if word in words_dict1 and word in words_dict2:
+            if freq_dict1[word] + freq_dict2[word] > current_max_count:
+                current_highest.clear()
+                current_highest.append(word)
+                current_max_count = freq_dict1[word] + freq_dict2[word]
+            elif freq_dict1[word] + freq_dict2[word] == current_max_count:
+                current_highest.append(word)
+        elif word in words_dict1 and word not in words_dict2:
+            if freq_dict1[word] > current_max_count:
+                current_highest.clear()
+                current_highest.append(word)
+                current_max_count = freq_dict1[word]
+            elif freq_dict1[word] == current_max_count:
+                current_highest.append(word)
+        else:
+            if freq_dict2[word] > current_max_count:
+                current_highest.clear()
+                current_highest.append(word)
+                current_max_count = freq_dict2[word]
+            elif freq_dict2[word] == current_max_count:
+                current_highest.append(word)
+    return current_highest
+
+            
 
 
 ### Problem 5: Finding TF-IDF ###
@@ -212,27 +268,27 @@ if __name__ == "__main__":
     print(freq2)      #  should print {'t': 2, 'h': 1, 'a': 1}
 
     ## Tests Problem 3: Similarity
-    # test_directory = "problem-sets/ps3/tests/student_tests/"
-    # hello_world, hello_friend = load_file(test_directory + 'hello_world.txt'), load_file(test_directory + 'hello_friends.txt')
-    # world, friend = text_to_list(hello_world), text_to_list(hello_friend)
-    # world_word_freq = get_frequencies(world)
-    # friend_word_freq = get_frequencies(friend)
-    # word1_freq = get_letter_frequencies('toes')
-    # word2_freq = get_letter_frequencies('that')
-    # word3_freq = get_frequencies('nah')
-    # word_similarity1 = calculate_similarity_score(word1_freq, word1_freq)
-    # word_similarity2 = calculate_similarity_score(word1_freq, word2_freq)
-    # word_similarity3 = calculate_similarity_score(word1_freq, word3_freq)
-    # word_similarity4 = calculate_similarity_score(world_word_freq, friend_word_freq)
-    # print(word_similarity1)       # should print 1.0
-    # print(word_similarity2)       # should print 0.25
-    # print(word_similarity3)       # should print 0.0
-    # print(word_similarity4)       # should print 0.4
+    test_directory = "problem-sets/ps3/tests/student_tests/"
+    hello_world, hello_friend = load_file(test_directory + 'hello_world.txt'), load_file(test_directory + 'hello_friends.txt')
+    world, friend = text_to_list(hello_world), text_to_list(hello_friend)
+    world_word_freq = get_frequencies(world)
+    friend_word_freq = get_frequencies(friend)
+    word1_freq = get_letter_frequencies('toes')
+    word2_freq = get_letter_frequencies('that')
+    word3_freq = get_frequencies('nah')
+    word_similarity1 = calculate_similarity_score(word1_freq, word1_freq)
+    word_similarity2 = calculate_similarity_score(word1_freq, word2_freq)
+    word_similarity3 = calculate_similarity_score(word1_freq, word3_freq)
+    word_similarity4 = calculate_similarity_score(world_word_freq, friend_word_freq)
+    print(word_similarity1)       # should print 1.0
+    print(word_similarity2)       # should print 0.25
+    print(word_similarity3)       # should print 0.0
+    print(word_similarity4)       # should print 0.4
 
     ## Tests Problem 4: Most Frequent Word(s)
-    # freq_dict1, freq_dict2 = {"hello": 5, "world": 1}, {"hello": 1, "world": 5}
-    # most_frequent = get_most_frequent_words(freq_dict1, freq_dict2)
-    # print(most_frequent)      # should print ["hello", "world"]
+    freq_dict1, freq_dict2 = {"hello": 5, "world": 1}, {"hello": 1, "world": 5}
+    most_frequent = get_most_frequent_words(freq_dict1, freq_dict2)
+    print(most_frequent)      # should print ["hello", "world"]
 
     ## Tests Problem 5: Find TF-IDF
     # tf_text_file = 'problem-sets/ps3/tests/student_tests/hello_world.txt'
