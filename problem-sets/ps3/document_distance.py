@@ -233,24 +233,23 @@ def get_idf(file_paths):
     total_nr_files = len(file_paths)
 
     # now for every file we need the frequency dictionary
-    freq_dict_list = []
-    sum_of_dict = []
-    for i in range(len(file_paths)-1):
+    list_of_words_lists = []
+    total_words_list = []
+    for i in range(len(file_paths)):
         loaded_text_file = load_file(file_paths[i])
-        words_list = text_to_list(loaded_text_file)
-        freq_dict_for_file = get_frequencies(words_list)
-        freq_dict_list.append(freq_dict_for_file)
-        sum_of_dict += list(freq_dict_for_file.keys())
+        words_in_text = text_to_list(loaded_text_file)
+        list_of_words_lists.append(words_in_text)
+        total_words_list += words_in_text
 
     # merge the lists of all files to one list containing of all words that occur somewhere
-    unique_words_list = list(set(sum_of_dict))
+    unique_words_list = list(set(total_words_list))
 
     # iterate through list of unqiue words and create dictionary with idf scores
     idf_dict = {}
     for word in unique_words_list:
         count = 0
-        for dict in freq_dict_list:
-            if word in dict.keys():
+        for elem in list_of_words_lists:
+            if word in elem:
                 count += 1
         idf_dict[word] = math.log10(total_nr_files / count)
     return idf_dict
@@ -272,7 +271,11 @@ def get_tfidf(tf_file_path, idf_file_paths):
     """
     score_list = []
     tf_scores = get_tf(tf_file_path)
-    idf_scores = get_idf()
+    idf_scores = get_idf(idf_file_paths)
+
+    for word in tf_scores.keys():
+        score_list.append((word, tf_scores[word]*idf_scores[word]))
+    return score_list
 
 
 if __name__ == "__main__":
@@ -331,7 +334,7 @@ if __name__ == "__main__":
     idf_text_files = ['problem-sets/ps3/tests/student_tests/hello_world.txt', 'problem-sets/ps3/tests/student_tests/hello_friends.txt']
     tf = get_tf(tf_text_file)
     idf = get_idf(idf_text_files)
-    # tf_idf = get_tfidf(tf_text_file, idf_text_files)
+    tf_idf = get_tfidf(tf_text_file, idf_text_files)
     print(tf)     # should print {'hello': 0.6666666666666666, 'world': 0.3333333333333333}
     print(idf)    # should print {'hello': 0.0, 'world': 0.3010299956639812, 'friends': 0.3010299956639812}
-    # print(tf_idf) # should print [('hello', 0.0), ('world', 0.10034333188799373)]
+    print(tf_idf) # should print [('hello', 0.0), ('world', 0.10034333188799373)]
