@@ -529,14 +529,14 @@ class Results_600(unittest.TextTestResult):
         return round(self.points, 3)
 
 if __name__ == '__main__':
-    
+    loader = unittest.TestLoader()
     suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestPrepData))
-    suite.addTest(unittest.makeSuite(TestWordFrequency))
-    suite.addTest(unittest.makeSuite(TestLetterFrequency))
-    suite.addTest(unittest.makeSuite(TestGetFrequentWords))
-    suite.addTest(unittest.makeSuite(TestSimilarity))
-    suite.addTest(unittest.makeSuite(TestTFIDF))
+    suite.addTest(loader.loadTestsFromTestCase(TestPrepData))
+    suite.addTest(loader.loadTestsFromTestCase(TestWordFrequency))
+    suite.addTest(loader.loadTestsFromTestCase(TestLetterFrequency))
+    suite.addTest(loader.loadTestsFromTestCase(TestGetFrequentWords))
+    suite.addTest(loader.loadTestsFromTestCase(TestSimilarity))
+    suite.addTest(loader.loadTestsFromTestCase(TestTFIDF))
     result = unittest.TextTestRunner(verbosity=4, resultclass=Results_600).run(suite)
 
     output = result.getOutput()
