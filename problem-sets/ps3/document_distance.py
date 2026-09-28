@@ -207,7 +207,16 @@ def get_tf(file_path):
         in the document) / (total number of words in the document)
     * Think about how we can use get_frequencies from earlier
     """
-    pass
+    text_file = load_file(file_path)
+    words_list = text_to_list(text_file)
+    total_nr_words = len(words_list)
+
+    # get frequencies of word
+    freq_dict = get_frequencies(words_list)
+    tf_dict = {}
+    for word in freq_dict.keys():
+        tf_dict[word] = freq_dict[word] / total_nr_words
+    return tf_dict
 
 def get_idf(file_paths):
     """
@@ -221,22 +230,49 @@ def get_idf(file_paths):
     with math.log10()
 
     """
-    pass
+    total_nr_files = len(file_paths)
+
+    # now for every file we need the frequency dictionary
+    freq_dict_list = []
+    sum_of_dict = []
+    for i in range(len(file_paths)-1):
+        loaded_text_file = load_file(file_paths[i])
+        words_list = text_to_list(loaded_text_file)
+        freq_dict_for_file = get_frequencies(words_list)
+        freq_dict_list.append(freq_dict_for_file)
+        sum_of_dict += list(freq_dict_for_file.keys())
+
+    # merge the lists of all files to one list containing of all words that occur somewhere
+    unique_words_list = list(set(sum_of_dict))
+
+    # iterate through list of unqiue words and create dictionary with idf scores
+    idf_dict = {}
+    for word in unique_words_list:
+        count = 0
+        for dict in freq_dict_list:
+            if word in dict.keys():
+                count += 1
+        idf_dict[word] = math.log10(total_nr_files / count)
+    return idf_dict
+
+
 
 def get_tfidf(tf_file_path, idf_file_paths):
     """
-        Args:
-            tf_file_path: name of file in the form of a string (used to calculate TF)
-            idf_file_paths: list of names of files, where each file name is a string
-            (used to calculate IDF)
-        Returns:
-           a sorted list of tuples (in increasing TF-IDF score), where each tuple is
-           of the form (word, TF-IDF). In case of words with the same TF-IDF, the
-           words should be sorted in increasing alphabetical order.
+    Args:
+        tf_file_path: name of file in the form of a string (used to calculate TF)
+        idf_file_paths: list of names of files, where each file name is a string
+        (used to calculate IDF)
+    Returns:
+        a sorted list of tuples (in increasing TF-IDF score), where each tuple is
+        of the form (word, TF-IDF). In case of words with the same TF-IDF, the
+        words should be sorted in increasing alphabetical order.
 
-        * TF-IDF(i) = TF(i) * IDF(i)
-        """
-    pass
+    * TF-IDF(i) = TF(i) * IDF(i)
+    """
+    score_list = []
+    tf_scores = get_tf(tf_file_path)
+    idf_scores = get_idf()
 
 
 if __name__ == "__main__":
@@ -291,11 +327,11 @@ if __name__ == "__main__":
     print(most_frequent)      # should print ["hello", "world"]
 
     ## Tests Problem 5: Find TF-IDF
-    # tf_text_file = 'problem-sets/ps3/tests/student_tests/hello_world.txt'
-    # idf_text_files = ['tests/student_tests/hello_world.txt', 'tests/student_tests/hello_friends.txt']
-    # tf = get_tf(tf_text_file)
-    # idf = get_idf(idf_text_files)
+    tf_text_file = 'problem-sets/ps3/tests/student_tests/hello_world.txt'
+    idf_text_files = ['problem-sets/ps3/tests/student_tests/hello_world.txt', 'problem-sets/ps3/tests/student_tests/hello_friends.txt']
+    tf = get_tf(tf_text_file)
+    idf = get_idf(idf_text_files)
     # tf_idf = get_tfidf(tf_text_file, idf_text_files)
-    # print(tf)     # should print {'hello': 0.6666666666666666, 'world': 0.3333333333333333}
-    # print(idf)    # should print {'hello': 0.0, 'world': 0.3010299956639812, 'friends': 0.3010299956639812}
+    print(tf)     # should print {'hello': 0.6666666666666666, 'world': 0.3333333333333333}
+    print(idf)    # should print {'hello': 0.0, 'world': 0.3010299956639812, 'friends': 0.3010299956639812}
     # print(tf_idf) # should print [('hello', 0.0), ('world', 0.10034333188799373)]
