@@ -70,9 +70,9 @@ class TestPS4A(unittest.TestCase):
 # Dictionary mapping function names from the above TestCase class to
 # the point value each test is worth.
 point_values = {
-	'test_data_representation' : 20,
-	'test_tree_height' : 20,
-	'test_tree_height_additional' : 20,
+    'test_data_representation' : 20,
+    'test_tree_height' : 20,
+    'test_tree_height_additional' : 20,
     'test_is_max_heap' : 20,
     'test_is_min_heap': 20
 }
@@ -115,18 +115,19 @@ class Results_600(unittest.TextTestResult):
         return self.points
 
 if __name__ == '__main__':
+    
+    loader = unittest.TestLoader()
+    suite = unittest.TestSuite()
+    suite.addTest(loader.loadTestsFromTestCase(TestPS4A))
+    
+    result = unittest.TextTestRunner(verbosity=2, resultclass=Results_600).run(suite)
+    output = result.getOutput()
+    
+    points = result.getPoints()
+    # weird bug with rounding
+    if points < .1:
+        points = 0
 
-	suite = unittest.TestSuite()
-	suite.addTest(unittest.makeSuite(TestPS4A))
-	result = unittest.TextTestRunner(verbosity=2, resultclass=Results_600).run(suite)
-
-	output = result.getOutput()
-	points = result.getPoints()
-
-	# weird bug with rounding
-	if points < .1:
-		points = 0
-
-	print("\nProblem Set 4A Unit Test Results:")
-	print(output)
-	print("\n{}% done with part A".format(points))
+    print("\nProblem Set 4A Unit Test Results:")
+    print(output)
+    print("\n{}% done with part A".format(points))

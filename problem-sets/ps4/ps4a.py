@@ -7,9 +7,9 @@ from tree import Node # Imports the Node object used to construct trees
 # Part A0: Data representation
 # Fill out the following variables correctly.
 # If correct, the test named test_data_representation should pass.
-tree1 = None #TODO
-tree2 = None #TODO
-tree3 = None #TODO
+tree1 = Node(8, Node(2, Node(1), Node(6)), Node(10)) #TODO
+tree2 = Node(7, Node(2, Node(1), Node(5, Node(3), Node(6))), Node(9, Node(8), Node(10))) #TODO
+tree3 = Node(5, Node(3, Node(2), Node(4)), Node(14, Node(12), Node(21, Node(20), Node(26)))) #TODO
 
 def find_tree_height(tree):
     '''
@@ -20,6 +20,7 @@ def find_tree_height(tree):
         The integer depth of the tree
     '''
     # TODO: Remove pass and write your code here
+    # base case: T is a leaf
     pass
 
 def is_heap(tree, compare_func):
