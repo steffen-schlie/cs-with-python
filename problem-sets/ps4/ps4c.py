@@ -2,6 +2,7 @@
 # Name:
 # Collaborators:
 
+import os
 import json
 import ps4b # Importing your work from Part B
 
@@ -60,7 +61,7 @@ def get_story_pads():
         return json.load(json_file)
 
 
-WORDLIST_FILENAME = 'words.txt'
+WORDLIST_FILENAME = os.path.join(os.path.dirname(os.path.abspath(__file__)),'words.txt')
 ### END HELPER CODE ###
 
 
@@ -80,7 +81,21 @@ def decrypt_message_try_pads(ciphertext, pads):
 
     Returns: (PlaintextMessage) A message with the decrypted ciphertext and the best pad
     '''
-    raise NotImplementedError  # delete this line and replace with your code here
+    word_list = load_words(WORDLIST_FILENAME)
+
+    best_message = None
+    best_count = -1
+
+    for pad in pads:
+        plaintext = ciphertext.decrypt_message(pad)
+        words = plaintext.get_text().split(" ")
+        count = sum(1 for w in words if is_word(word_list,w))
+
+        if count >= best_count:
+            best_count = count
+            best_message = plaintext
+    return best_message
+        
 
 
 def decode_story():
@@ -91,7 +106,9 @@ def decode_story():
     Returns: (string) the decoded story
 
     '''
-    raise NotImplementedError  # delete this line and replace with your code here
+    ciphertext = ps4b.EncryptedMessage(get_story_string())
+    pads = get_story_pads()
+    return decrypt_message_try_pads(ciphertext, pads).get_text()
 
 
 
