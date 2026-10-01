@@ -247,9 +247,9 @@ class Results_600(unittest.TextTestResult):
 
 
 if __name__ == '__main__':
-
+    loader = unittest.TestLoader()
     suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(TestPS4BC))
+    suite.addTest(loader.loadTestsFromTestCase(TestPS4BC))
     result = unittest.TextTestRunner(
         verbosity=2, resultclass=Results_600).run(suite)
 

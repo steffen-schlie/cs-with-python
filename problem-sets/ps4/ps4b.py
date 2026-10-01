@@ -15,7 +15,7 @@ class Message(object):
         a Message object has one attribute:
             the message text
         '''
-        raise NotImplementedError  # delete this line and replace with your code here
+        self.text = input_text
 
     def __repr__(self):
         '''
@@ -32,7 +32,7 @@ class Message(object):
 
         Returns: (string) the message text
         '''
-        raise NotImplementedError  # delete this line and replace with your code here
+        return self.text
 
     def shift_char(self, char, shift):
         '''
@@ -44,7 +44,11 @@ class Message(object):
 
         Returns: (string) the shifted character with ASCII value in the range [32, 126]
         '''
-        raise NotImplementedError  # delete this line and replace with your code here
+        char_asci_val = ord(char) # between 32 and 126
+        # set back to range [0,94], apply shift and set back to range [32,126]
+        new_asci_val = (((char_asci_val-32)+shift)%95)+32
+
+        return chr(new_asci_val)
 
     def apply_pad(self, pad):
         '''
@@ -57,7 +61,13 @@ class Message(object):
 
         Returns: (string) The ciphertext produced using the one time pad
         '''
-        raise NotImplementedError  # delete this line and replace with your code here
+        if len(pad) != len(self.text):
+            raise ValueError("Lengths of message and pad differ!")
+        else:
+            cipher_text = ""
+            for i in range(len(self.text)):
+                cipher_text += self.shift_char(self.text[i], pad[i])
+            return cipher_text
 
 
 class PlaintextMessage(Message):
@@ -75,7 +85,12 @@ class PlaintextMessage(Message):
                 or generated randomly using self.generate_pad() if pad is None)
             the ciphertext (string, input_text encrypted using the pad)
         '''
-        raise NotImplementedError  # delete this line and replace with your code here
+        super().__init__(input_text)
+        if pad == None:
+            self.pad = self.generate_pad()
+        else:
+            self.pad = pad.copy()
+        self.ciphertext = self.apply_pad(self.pad)
 
     def __repr__(self):
         '''
@@ -96,7 +111,10 @@ class PlaintextMessage(Message):
 
         Returns: (list of integers) the new one time pad
         '''
-        raise NotImplementedError  # delete this line and replace with your code here
+        int_pad = []
+        for i in range(len(self.text)):
+            int_pad.append(random.randint(0,109))
+        return int_pad
 
     def get_pad(self):
         '''
@@ -104,7 +122,7 @@ class PlaintextMessage(Message):
 
         Returns: (list of integers) a COPY of your pad
         '''
-        raise NotImplementedError  # delete this line and replace with your code here
+        return self.pad
 
     def get_ciphertext(self):
         '''
@@ -112,7 +130,7 @@ class PlaintextMessage(Message):
 
         Returns: (string) the ciphertext
         '''
-        raise NotImplementedError  # delete this line and replace with your code here
+        return self.ciphertext
 
     def change_pad(self, new_pad):
         '''
@@ -124,7 +142,12 @@ class PlaintextMessage(Message):
 
         Returns: nothing
         '''
-        raise NotImplementedError  # delete this line and replace with your code here
+        if len(new_pad) != len(self.text):
+            raise ValueError("Lengths of message and pad differ!")
+        else:
+            self.pad = new_pad.copy()
+            self.ciphertext = self.apply_pad(self.pad)
+
 
 
 class EncryptedMessage(Message):
@@ -137,7 +160,7 @@ class EncryptedMessage(Message):
         an EncryptedMessage object inherits from Message. It has one attribute:
             the message text (ciphertext)
         '''
-        raise NotImplementedError  # delete this line and replace with your code here
+        super().__init__(input_text)
 
     def __repr__(self):
         '''
@@ -157,4 +180,11 @@ class EncryptedMessage(Message):
 
         Returns: (PlaintextMessage) the decrypted message (containing the pad)
         '''
-        raise NotImplementedError  # delete this line and replace with your code here
+        # Adjust pad to work backwards
+        if len(pad) != len(self.text):
+            raise ValueError("Lengths of text and pad differ!")
+        else:
+            rev_pad = [-p for p in pad]
+            plaintext = self.apply_pad(rev_pad)
+
+            return PlaintextMessage(plaintext, pad)
