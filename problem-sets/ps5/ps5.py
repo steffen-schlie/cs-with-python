@@ -155,7 +155,14 @@ def reveal_bw_image(filename):
     Returns:
         result: an Image object containing the hidden image
     """
-    pass
+    im = Image.open(filename)
+    pixels = img_to_pix(filename)
+
+    # LSB is 0 or 1 -> rescale to the full range 0..255
+    revealed = [extract_end_bits(1, p)*255 for p in pixels]
+
+    return pix_to_img(revealed, im.size, "L")
+     
 
 
 def reveal_color_image(filename):
@@ -166,7 +173,18 @@ def reveal_color_image(filename):
     Returns:
         result: an Image object containing the hidden image
     """
-    pass
+    num_bits = 3
+    scale = 255 / (2 ** num_bits - 1)
+
+    im = Image.open(filename)
+    pixels = img_to_pix(filename)
+
+    revealed = []
+    for p in pixels:
+        bits = extract_end_bits(num_bits, p)
+        revealed.append(tuple(int(b*scale) for b in bits))
+
+    return pix_to_img(revealed, im.size, "RGB")
 
 
 def reveal_image(filename):
@@ -226,11 +244,13 @@ def main():
     im2.show()
 
     # Uncomment the following lines to test part 2
-    #im = reveal_image(os.path.join(os.path.dirname(os.path.abspath(__file__)),'hidden1.bmp')))
-    # im.show()
+    im = reveal_image(os.path.join(os.path.dirname(os.path.abspath(__file__)),'hidden1.bmp'))
+    im.show()
+    im.save("hidden1_revealed.png")
 
-    #im2 = reveal_image(os.path.join(os.path.dirname(os.path.abspath(__file__)),'hidden2.bmp')))
-    # im2.show()
+    im2 = reveal_image(os.path.join(os.path.dirname(os.path.abspath(__file__)),'hidden2.bmp'))
+    im2.show()
+    im2.save("hidden2_revealed.png")
     
 
 if __name__ == '__main__':

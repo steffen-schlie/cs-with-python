@@ -1,4 +1,4 @@
-import sys
+import sys, os 
 import unittest
 import ps5
 import pickle
@@ -13,7 +13,7 @@ class TestPS5(unittest.TestCase):
     # hidden images change.
     def help_save_hidden_img(self, pkl_file_name, img_file_name):
         f = open(pkl_file_name, 'wb')
-        im = reveal_image(img_file_name)
+        im = ps5.reveal_image(img_file_name)
         pickle.dump(im, f)
         f.close()
         
@@ -52,13 +52,13 @@ class TestPS5(unittest.TestCase):
         self.bit_tester(ps5.extract_end_bits, test_cases)
     
     def test_reveal_img_bw(self):
-        self.assertTrue(self.help_check_hidden_img('tester_bw_img.obj', 
-                                                   ps5.reveal_image('hidden1.bmp')),
+        self.assertTrue(self.help_check_hidden_img(os.path.join(os.path.dirname(os.path.abspath(__file__)),'tester_bw_img.obj'), 
+                                                   ps5.reveal_image(os.path.join(os.path.dirname(os.path.abspath(__file__)),'hidden1.bmp'))),
                         "Hidden black/white image not revealed correctly")
         
     def test_reveal_img_rgb(self):
-        self.assertTrue(self.help_check_hidden_img('tester_rgb_img.obj',
-                                                   ps5.reveal_image('hidden2.bmp')),
+        self.assertTrue(self.help_check_hidden_img(os.path.join(os.path.dirname(os.path.abspath(__file__)),'tester_rgb_img.obj'),
+                                                   ps5.reveal_image(os.path.join(os.path.dirname(os.path.abspath(__file__)),'hidden2.bmp'))),
                         "Hidden rgb (color) image not revealed correctly")
 
 point_values = {
